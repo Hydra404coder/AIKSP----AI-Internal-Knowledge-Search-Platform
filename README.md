@@ -1,23 +1,21 @@
-# 🤖 AIKSP - AI Internal Knowledge Search Platform
+# 🤖 AIKSP – AI Internal Knowledge Search Platform
 
+<p align="center">
+  <strong>Enterprise-grade Retrieval Augmented Generation (RAG) platform for internal company knowledge</strong>
+</p>
 
-💡 What is AIKSP?
-AIKSP is a knowledge management platform that uses Retrieval Augmented Generation (RAG) to let employees "chat" with their company's internal documents.
+<p align="center">
+  Chat • Search • Cite • Secure
+</p>
 
-How It Works:
-Upload: Admins upload PDFs, Word docs, or text files.
-Process: System extracts text and creates searchable chunks.
-Search: Employees ask questions in natural language.
-Generate: AI (Gemini) answers using ONLY your company's documents.
-Cite: Every answer includes references to source documents.
-Example Use Cases:
-📖 "What is our vacation policy?" → AI answers with citations
-🏢 "Who is the HR contact?" → AI finds and returns contact info
-⚙️ "How do I submit an expense report?" → AI provides step-by-step guide
+---
 
+## 🧠 Powered By
 
-
-> **Enterprise-grade RAG (Retrieval Augmented Generation) system** that enables employees to search and ask AI-powered questions about internal company documents. Built with React, Node.js, MongoDB, and Google Gemini AI.
+![RAG](https://img.shields.io/badge/RAG-Retrieval%20Augmented%20Generation-purple?style=flat-square)
+![AI](https://img.shields.io/badge/AI-Google%20Gemini-orange?style=flat-square)
+![LLM](https://img.shields.io/badge/LLM-Context%20Aware-blueviolet?style=flat-square)
+![Security](https://img.shields.io/badge/Security-JWT%20Auth-red?style=flat-square)
 
 ![Node.js](https://img.shields.io/badge/Node.js-20+-green?style=flat-square)
 ![React](https://img.shields.io/badge/React-18-blue?style=flat-square)
@@ -27,207 +25,318 @@ Example Use Cases:
 
 ---
 
-## 📋 Table of Contents
+## 💡 What is AIKSP?
 
-1. [Quick Start (5 minutes)](#-quick-start-5-minutes)
-2. [What is AIKSP?](#-what-is-aiksp)
-3. [System Architecture](#-system-architecture)
-4. [Prerequisites](#-prerequisites)
-5. [Setup Instructions](#-setup-instructions)
-   - [Local Development](#local-development-setup)
-   - [Docker Setup](#docker-setup)
-6. [API Keys & Credentials](#-api-keys--credentials)
-7. [Running the Application](#-running-the-application)
-8. [Project Structure](#-project-structure)
-9. [API Endpoints](#-api-endpoints)
-10. [Troubleshooting](#-troubleshooting)
-11. [Contributing](#-contributing)
+**AIKSP (AI Internal Knowledge Search Platform)** is a secure, enterprise-ready knowledge management system that allows employees to **chat with internal company documents** using **Retrieval Augmented Generation (RAG)**.
+
+Unlike generic AI chatbots, AIKSP:
+✅ Uses **only your organization’s documents**  
+✅ Provides **verifiable citations**  
+✅ Prevents hallucinations  
+✅ Works across **multiple organizations securely**
 
 ---
 
-┌─────────────────────────────────────────────────────────────────┐
-│                                        User's Browser                               │
-│                                        (React Frontend)                             │
-└────────────────────────────────┬────────────────────────────────┘
-                                 │ HTTP/HTTPS
-                                 ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                    API Server (Express)                         │                   | 
-│  ┌──────────────┐  ┌─────────────────┐  ┌────────────────┐          │
-│  │ Auth Routes      │  │ Document Routes      │  │ Search Routes       │          │
-│  └──────────────┘  └─────────────────┘  └────────────────┘          │
-│        ↓                   ↓                      ↓             │                   |
-│  ┌──────────────────────────────────────────────────────┐           │
-│  │            Business Logic (Services)                                 │           │
-│  │ • auth.service.js   • document.service.js                            │           │
-│  │ • search.service.js • ai.service.js (RAG Engine)                     │           │
-│  └──────────────────────────────────────────────────────┘           │
-└────────┬─────────────────────────────────────┬──────────────────┘
-            │                                     │
-            ▼                                     ▼
-    ┌─────────────┐                 ┌──────────────────────┐
-    │  MongoDB        │                 │ Google Gemini API           │
-    │  Database       │                 │ (AI Question Answerer)      |
-    └─────────────┘                 └──────────────────────┘
+## 🖼️ High-Level Visual Flow
 
-Key Features:
-RAG Architecture: Only uses your company's documents (no hallucinations)
-Multi-Tenancy: Multiple organizations can use the system securely
-Role-Based Access: Admin, Org Admin, User roles
-AI Fallback: If Gemini fails (404/429), shows extracted summary + graph
-Full-Text Search: MongoDB text indexes for fast searches
-JWT Authentication: Secure token-based auth
-Rate Limiting: Protects API from abuse
+```
+📄 Upload Docs
+     ↓
+🧩 Text Extraction & Chunking
+     ↓
+🗂️ Vector / Text Indexing
+     ↓
+🔍 Natural Language Search
+     ↓
+🤖 Gemini AI (RAG)
+     ↓
+📌 Answer + Citations
+```
 
-📦 Prerequisites
-Before you start, ensure you have:
+---
 
-Required Software:
-Node.js 20+ (Download)
-MongoDB 7+ (Local or Cloud)
-Local: Download Community Edition
-Cloud: MongoDB Atlas (recommended for production)
-npm or yarn (comes with Node.js)
-Docker & Docker Compose (optional, for containerized setup)
-Git (Download)
-Required Credentials:
-Google Gemini API Key (Free tier available)
-MongoDB Connection String (if using Atlas)
+## 🧠 How It Works
 
+1. **Upload** 📤  
+   Organization admins upload PDFs, Word documents, or text files.
+
+2. **Process** ⚙️  
+   The system extracts text and splits it into optimized searchable chunks.
+
+3. **Search** 🔍  
+   Employees ask questions using natural language.
+
+4. **Generate** 🤖  
+   Google Gemini AI generates answers using **only internal documents**.
+
+5. **Cite** 📌  
+   Every response includes exact source references.
+
+---
+
+## 🏢 Example Use Cases
+
+📖 **“What is our vacation policy?”**  
+→ AI answers with citations from HR documents  
+
+🏢 **“Who is the HR contact?”**  
+→ AI retrieves official contact information  
+
+⚙️ **“How do I submit an expense report?”**  
+→ AI explains step-by-step using internal manuals  
+
+---
+
+## 📋 Table of Contents
+
+1. Quick Start (5 Minutes)
+2. Key Features
+3. System Architecture
+4. Prerequisites
+5. Setup Instructions (Local & Docker)
+6. Environment Variables
+7. API Keys & Credentials
+8. Project Structure
+9. API Endpoints
+10. Troubleshooting
+11. Production Deployment
+12. First Steps
+13. Contributing
+
+---
+
+## ✨ Key Features
+
+🧠 **RAG Architecture**  
+- Answers strictly from company documents  
+- Zero hallucinations  
+
+🏢 **Multi-Tenancy**  
+- Multiple organizations, fully isolated  
+
+🔐 **Role-Based Access Control**  
+- Admin  
+- Org Admin  
+- Employee  
+
+🛑 **AI Fallback System**  
+- If Gemini fails (404 / 429)  
+- Shows extracted summary + graph  
+
+⚡ **Full-Text Search**  
+- MongoDB text indexes for fast queries  
+
+🔑 **JWT Authentication**  
+- Secure token-based auth  
+
+🚦 **Rate Limiting**  
+- Prevents API abuse  
+
+📌 **Document Citations**  
+- Every answer is traceable  
+
+---
+
+## 🧩 System Architecture
+
+```
+Frontend (React + Vite)
+        ↓
+Backend (Node.js + Express)
+        ↓
+MongoDB (Text + Metadata)
+        ↓
+RAG Engine
+        ↓
+Google Gemini AI
+```
+
+---
+
+## 📦 Prerequisites
+
+### Required Software
+
+- Node.js 20+
+- MongoDB 7+
+  - Local: MongoDB Community Edition  
+  - Cloud: MongoDB Atlas (recommended)
+- npm or yarn
+- Git
+- Docker & Docker Compose (optional)
+
+### Required Credentials
+
+- Google Gemini API Key
+- MongoDB Connection String
+
+---
 
 ## 🚀 Quick Start
 
-### Prerequisites
-- Node.js 20+
-- MongoDB 7+
-- Google Gemini API key (free at [makersuite.google.com](https://makersuite.google.com/app/apikey))
+### Local Development Setup (5 Minutes)
 
-### Local Setup (5 minutes)
-
-``bash
-# Clone repo
+```bash
 git clone <repo-url>
 cd AIKSP
 
-# Backend setup
 cd backend
 npm install
-cp  .env
-# Edit .env with your API keys
+cp .env
+# Edit .env with your credentials
 
-# Frontend setup
 cd ../frontend
 npm install
 
-# Start MongoDB (if local)
 mongod
 
-# Terminal 1: Start backend
 cd backend && npm run dev
-
-# Terminal 2: Start frontend
 cd frontend && npm run dev
+```
 
-Docker Setup (1 command)
+---
+
+### 🐳 Docker Setup (Single Command)
+
+```bash
 docker compose up --build
-# Access: http://localhost
+```
 
-# Server
+🌐 Access at: **http://localhost**
+
+---
+
+## ⚙️ Environment Variables
+
+```env
 PORT=5000
 NODE_ENV=development
 
-# Database
 MONGODB_URI=mongodb://localhost:27017/aiksp
 
-# Authentication
 JWT_SECRET=your-super-secret-key-here-make-it-random
 JWT_EXPIRES_IN=7d
 
-# Google Gemini AI (REQUIRED)
-GEMINI_API_KEY=...your_key_here
+GEMINI_API_KEY=your_key_here
 GEMINI_MODEL=gemini-2.0-flash
 
-# Upload
 MAX_FILE_SIZE=10485760
 UPLOAD_PATH=./uploads
 
-# Frontend
 FRONTEND_URL=http://localhost:5173
 
-# Rate Limiting
 RATE_LIMIT_MAX_REQUESTS=1000
+```
 
-etting Your API Keys
-Google Gemini API Key:
+---
 
-Go to https://makersuite.google.com/app/apikey
-Click "Create API key"
-Copy and paste in .env
-MongoDB Connection:
+## 🔑 API Keys & Credentials
 
-Local: mongodb://localhost:27017/aiksp
-Cloud: MongoDB Atlas (recommended for production)
-JWT Secret:
-Generate at https://randomkeygen.com (copy "CodeIgniter Encryption Keys")
+🔸 **Google Gemini API Key**  
+https://makersuite.google.com/app/apikey
 
-📊 How It Works
-Upload → Organization admins upload company documents
-Process → System extracts and chunks text for searching
-Search → Employees ask questions in natural language
-AI Answers → Gemini AI generates answers using only company docs
-Citations → Every answer includes source document references
+🔸 **MongoDB**
+- Local: `mongodb://localhost:27017/aiksp`
+- Cloud: MongoDB Atlas (recommended)
 
-🔌 API Endpoints
-Auth
-POST   /api/auth/register/organization    Create organization
-POST   /api/auth/register/employee        Join organization
-POST   /api/auth/login                    Sign in
-GET    /api/auth/profile                  Get user profile
-POST   /api/auth/logout                   Sign out
+🔸 **JWT Secret**
+Generate from https://randomkeygen.com  
+(Use *CodeIgniter Encryption Keys*)
 
-Documents
-POST   /api/documents                     Upload document
-GET    /api/documents                     List documents
-GET    /api/documents/:id                 Get document
-DELETE /api/documents/:id                 Delete document
+---
 
-Search
-GET    /api/search?q=query                Search documents
-POST   /api/search/ask                    Ask AI question
+## 📁 Project Structure
 
-🐛 Common Issues
->MongoDB connection error?
-# Start MongoDB
+```
+AIKSP/
+├── backend/
+│   ├── controllers/
+│   ├── services/
+│   ├── routes/
+│   ├── models/
+│   └── app.js
+├── frontend/
+│   ├── src/
+│   ├── pages/
+│   └── components/
+└── docker-compose.yml
+```
+
+---
+
+## 🔌 API Endpoints
+
+### 🔐 Authentication
+```
+POST   /api/auth/register/organization
+POST   /api/auth/register/employee
+POST   /api/auth/login
+GET    /api/auth/profile
+POST   /api/auth/logout
+```
+
+### 📄 Documents
+```
+POST   /api/documents
+GET    /api/documents
+GET    /api/documents/:id
+DELETE /api/documents/:id
+```
+
+### 🔍 Search & AI
+```
+GET    /api/search?q=query
+POST   /api/search/ask
+```
+
+---
+
+## 🐛 Troubleshooting
+
+🟡 **MongoDB not running**
+```bash
 mongod
-# or with Docker:
-docker run -d -p 27017:27017 --name mongodb mongo:7
+```
 
->Port 5000 already in use?
-# Change in .env
+🟡 **Port already in use**
+```
 PORT=5001
+```
 
->Frontend can't reach backend?
-Check FRONTEND_URL in .env matches frontend URL
-Check backend is running on port 5000
+🟡 **Frontend cannot reach backend**
+- Check `FRONTEND_URL`
+- Ensure backend is running
 
-📚 Documentation
-Each source file has detailed comments explaining the code. Check:
-ai.service.js - RAG engine & AI logic
-auth.controller.js - Authentication flow
-document.service.js - Document processing
+---
 
+## 📚 Code Documentation
 
-🚀 Production Deployment
-Use MongoDB Atlas (not local)
-Generate new JWT secret
-Get Gemini API key for production project
-Deploy to: Heroku, AWS, DigitalOcean, or Railway
-Update FRONTEND_URL to your domain
-Enable HTTPS
+📄 `ai.service.js` – RAG engine & Gemini AI logic  
+📄 `auth.controller.js` – Authentication flow  
+📄 `document.service.js` – Document ingestion & processing  
 
+---
 
-📝 First Steps
-Sign up → Create organization at /org-signup
-Upload docs → Add PDF/Word files via Documents page
-Ask questions → Go to Search and type your question
-Invite team → Share the secret key for employee signup
+## 🚀 Production Deployment
+
+- Use MongoDB Atlas
+- Generate a new JWT secret
+- Use production Gemini API key
+- Deploy to AWS / DigitalOcean / Railway / Heroku
+- Update `FRONTEND_URL`
+- Enable HTTPS
+
+---
+
+## 📝 First Steps
+
+1️⃣ Sign up → Create organization at `/org-signup`  
+2️⃣ Upload documents → PDFs / Word files  
+3️⃣ Ask questions → Search page  
+4️⃣ Invite team → Share employee secret key  
+
+---
+
+## 🤝 Contributing
+
+Contributions, issues, and pull requests are welcome.
