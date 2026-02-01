@@ -1,0 +1,66 @@
+# =============================================================================
+# DOCKERIGNORE - FILES TO EXCLUDE FROM DOCKER BUILD
+# =============================================================================
+#
+# WHAT IS THIS FILE?
+# Similar to .gitignore, this file tells Docker which files to SKIP
+# when copying files into the container.
+#
+# WHY EXCLUDE FILES?
+# 1. Smaller image size (faster builds and deployments)
+# 2. Security (don't include secrets or sensitive files)
+# 3. Prevent conflicts (don't copy local node_modules)
+# 4. Faster builds (less files to process)
+#
+# =============================================================================
+
+# Dependencies - will be installed inside container
+node_modules
+npm-debug.log
+
+# Environment files - contain secrets, should be injected at runtime
+.env
+.env.*
+!.env.example
+
+# Version control
+.git
+.gitignore
+
+# IDE and editor files
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+dist
+build
+
+# Test files - not needed in production
+coverage
+*.test.js
+*.spec.js
+__tests__
+
+# Documentation
+README.md
+CHANGELOG.md
+docs
+
+# Logs
+logs
+*.log
+
+# Uploads (will be mounted as volume)
+uploads/*
+!uploads/.gitkeep
+
+# Docker files (prevent infinite loop)
+Dockerfile*
+docker-compose*
+.dockerignore

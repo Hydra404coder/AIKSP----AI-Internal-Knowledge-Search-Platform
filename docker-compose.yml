@@ -1,0 +1,191 @@
+# =============================================================================
+# DOCKER COMPOSE - ORCHESTRATE MULTIPLE CONTAINERS
+# =============================================================================
+#
+# WHAT IS DOCKER COMPOSE?
+# Docker Compose lets you define and run multi-container applications.
+# Instead of running multiple 'docker run' commands, you define everything
+# in one YAML file and run 'docker compose up'.
+#
+# OUR ARCHITECTURE:
+# ┌─────────────────────────────────────────────────────────────────┐
+# │                        HOST MACHINE                              │
+# │  ┌─────────────────────────────────────────────────────────┐    │
+# │  │                    Docker Network                        │    │
+# │  │  ┌─────────────┐  ┌─────────────┐  ┌─────────────────┐  │    │
+# │  │  │  Frontend   │  │   Backend   │  │    MongoDB      │  │    │
+# │  │  │  (nginx)    │──│   (Node)    │──│   (Database)    │  │    │
+# │  │  │  Port 80    │  │  Port 5000  │  │   Port 27017    │  │    │
+# │  │  └─────────────┘  └─────────────┘  └─────────────────┘  │    │
+# │  └─────────────────────────────────────────────────────────┘    │
+# │                              │                                   │
+# │                        Port 80 exposed                          │
+# └─────────────────────────────────────────────────────────────────┘
+#
+# CONTAINERS COMMUNICATE:
+# Containers can talk to each other by service name (e.g., "mongodb")
+# This is Docker's built-in DNS for container networking.
+#
+# =============================================================================
+
+# Docker Compose file format version
+version: '3.8'
+
+# =============================================================================
+# SERVICES - Define each container
+# =============================================================================
+services:
+
+  # ---------------------------------------------------------------------------
+  # MONGODB - Database Service
+  # ---------------------------------------------------------------------------
+  mongodb:
+    # Use official MongoDB image
+    image: mongo:7
+    
+    # Container name (for easier reference)
+    container_name: aiksp-mongodb
+    
+    # Restart policy - always restart unless manually stopped
+    restart: unless-stopped
+    
+    # Environment variables for MongoDB
+    environment:
+      # Root username and password (for initial setup)
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USERNAME:-admin}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD:-securepassword123}
+      # Create a database on first run
+      MONGO_INITDB_DATABASE: aiksp
+    
+    # Mount volumes for data persistence
+    # Without this, data is lost when container stops
+    volumes:
+      - mongodb_data:/data/db
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    
+    # Port mapping - only expose internally (not to host)
+    # Other containers can access via mongodb:27017
+    expose:
+      - "27017"
+    
+    # Attach to our network
+    networks:
+      - aiksp-network
+    
+    # Health check - verify MongoDB is accepting connections
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+
+  # ---------------------------------------------------------------------------
+  # BACKEND - Node.js API Service
+  # ---------------------------------------------------------------------------
+  backend:
+    # Build from the backend Dockerfile
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    
+    # Container name
+    container_name: aiksp-backend
+    
+    # Restart policy
+    restart: unless-stopped
+    
+    # Environment variables
+    # These override what's in .env file
+    environment:
+      NODE_ENV: production
+      PORT: 5000
+      # MongoDB connection string using container name
+      MONGODB_URI: mongodb://${MONGO_ROOT_USERNAME:-admin}:${MONGO_ROOT_PASSWORD:-securepassword123}@mongodb:27017/aiksp?authSource=admin
+      JWT_SECRET: ${JWT_SECRET:-your-super-secret-jwt-key-change-in-production}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-7d}
+      GEMINI_API_KEY: ${GEMINI_API_KEY}
+    
+    # Mount volumes
+    volumes:
+      # Persist uploaded files
+      - backend_uploads:/app/uploads
+    
+    # Expose port internally
+    expose:
+      - "5000"
+    
+    # Attach to network
+    networks:
+      - aiksp-network
+    
+    # Wait for MongoDB to be ready before starting
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    
+    # Health check
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider http://localhost:5000/api/health || exit 1
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  # ---------------------------------------------------------------------------
+  # FRONTEND - React Application served by nginx
+  # ---------------------------------------------------------------------------
+  frontend:
+    # Build from the frontend Dockerfile
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: /api
+    
+    # Container name
+    container_name: aiksp-frontend
+    
+    # Restart policy
+    restart: unless-stopped
+    
+    # Port mapping - expose to host
+    # Users access the app through port 80
+    ports:
+      - "${APP_PORT:-80}:80"
+    
+    # Attach to network
+    networks:
+      - aiksp-network
+    
+    # Wait for backend to be ready
+    depends_on:
+      backend:
+        condition: service_healthy
+    
+    # Health check
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider http://localhost/ || exit 1
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+# =============================================================================
+# NETWORKS - Container Communication
+# =============================================================================
+networks:
+  aiksp-network:
+    # Bridge network - containers can communicate by service name
+    driver: bridge
+
+# =============================================================================
+# VOLUMES - Persistent Data Storage
+# =============================================================================
+volumes:
+  # MongoDB data persistence
+  mongodb_data:
+    name: aiksp-mongodb-data
+  
+  # Backend uploads persistence
+  backend_uploads:
+    name: aiksp-backend-uploads
