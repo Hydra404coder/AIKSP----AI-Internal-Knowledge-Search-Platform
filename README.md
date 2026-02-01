@@ -8,6 +8,8 @@
   Chat • Search • Cite • Secure
 </p>
 
+<img width="1024" height="1024" alt="image" src="https://github.com/user-attachments/assets/75a74818-e6d9-4c1b-8457-a9112dfa9657" />
+
 ---
 
 ## 🧠 Powered By
@@ -340,3 +342,11 @@ PORT=5001
 ## 🤝 Contributing
 
 Contributions, issues, and pull requests are welcome.
+<img width="835" height="843" alt="image" src="https://github.com/user-attachments/assets/740b60a1-a3bc-4aac-9809-a820af887f77" />
+<img width="985" height="1600" alt="image" src="https://github.com/user-attachments/assets/8b23cda9-39a7-436b-a067-edabba897509" />
+<img width="1079" height="1485" alt="image" src="https://github.com/user-attachments/assets/737d332d-b6d9-47c4-88b4-5406b68ece20" />
+<img width="1079" height="1352" alt="image" src="https://github.com/user-attachments/assets/a66a8267-cbcb-4299-8ae8-a0f7c16ecf8e" />
+<img width="992" height="1600" alt="image" src="https://github.com/user-attachments/assets/0b5e9646-ca90-4e8c-b5d0-9c2d9e9f8b78" />
+
+
+
