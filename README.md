@@ -8,7 +8,7 @@
   Chat • Search • Cite • Secure
 </p>
 
-<img width="1024" height="1024" alt="image" src="https://github.com/user-attachments/assets/75a74818-e6d9-4c1b-8457-a9112dfa9657" />
+<img width="100" height="100" alt="image" src="https://github.com/user-attachments/assets/75a74818-e6d9-4c1b-8457-a9112dfa9657" />
 
 ---
 
